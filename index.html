@@ -1,0 +1,1471 @@
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Caffeine Cove | Dhaka’s Cozy Coffee Spot</title>
+<meta name="description" content="Caffeine Cove – specialty coffee, cozy vibes, and a mini game. Visit us at TSC More, Dhaka." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          coffee: {
+            50: '#fbf7f3',
+            100: '#f6efe8',
+            200: '#eadfcf',
+            300: '#dcc8ae',
+            400: '#c8a97e',
+            500: '#a9865a',
+            600: '#8e6f49',
+            700: '#73593c',
+            800: '#5e4833',
+            900: '#4b392a'
+          },
+          cream: '#fff7ed',
+          cocoa: '#3a2a1f'
+        },
+        boxShadow: {
+          soft: '0 10px 30px rgba(0,0,0,0.08)',
+          'soft-lg': '0 20px 60px rgba(0,0,0,0.12)'
+        },
+        fontFamily: {
+          display: ['"Playfair Display"', 'serif'],
+          sans: ['Outfit', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial']
+        },
+        keyframes: {
+          float: {
+            '0%, 100%': { transform: 'translateY(0)' },
+            '50%': { transform: 'translateY(-10px)' }
+          },
+          steam: {
+            '0%': { opacity: 0, transform: 'translateY(8px) scale(0.9)' },
+            '50%': { opacity: 1 },
+            '100%': { opacity: 0, transform: 'translateY(-8px) scale(1.1)' }
+          },
+          beanOrbit: {
+            '0%': { transform: 'rotate(0deg) translateX(14px) rotate(0deg)' },
+            '100%': { transform: 'rotate(360deg) translateX(14px) rotate(-360deg)' }
+          }
+        },
+        animation: {
+          float: 'float 6s ease-in-out infinite',
+          steam: 'steam 2.4s ease-in-out infinite',
+          beanOrbit: 'beanOrbit 10s linear infinite'
+        }
+      }
+    }
+  }
+</script>
+<style>
+  :root { color-scheme: light; }
+  html { scroll-behavior: smooth; }
+  .bg-texture {
+    background-image:
+      radial-gradient(1200px 600px at 10% 10%, rgba(202,169,126,0.08), transparent 60%),
+      radial-gradient(900px 500px at 90% 20%, rgba(58,42,31,0.06), transparent 60%),
+      radial-gradient(800px 400px at 50% 100%, rgba(202,169,126,0.08), transparent 60%);
+  }
+  .glass {
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+  }
+  .menu-card:hover .menu-img {
+    transform: scale(1.06);
+  }
+  .steam i {
+    position: absolute;
+    width: 2px;
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.6);
+    filter: blur(0.4px);
+    animation: steam 2.2s ease-in-out infinite;
+  }
+  .steam i:nth-child(2){ left: 6px; animation-delay: .3s; height: 12px; }
+  .steam i:nth-child(3){ left: 12px; animation-delay: .6s; height: 10px; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  /* Game canvas crispness */
+  #gameCanvas { image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
+</style>
+</head>
+<body class="bg-[#fdf8f2] text-cocoa font-sans antialiased selection:bg-coffee-200/70 selection:text-cocoa">
+
+<!-- NAVBAR -->
+<header class="sticky top-0 z-50">
+  <div class="bg-white/70 glass border-b border-coffee-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="#home" class="flex items-center gap-3 group">
+          <div class="relative h-10 w-10 rounded-2xl bg-gradient-to-br from-coffee-400 to-coffee-600 shadow-soft flex items-center justify-center overflow-hidden">
+            <span class="text-white font-display text-xl leading-none">C</span>
+            <span class="absolute -right-1 -bottom-1 h-4 w-4 rounded-full bg-cream border border-coffee-200"></span>
+          </div>
+          <div>
+            <p class="text-lg font-bold tracking-tight text-cocoa">Caffeine Cove</p>
+            <p class="text-[11px] uppercase tracking-widest text-coffee-600 -mt-1">TSC More, Dhaka</p>
+          </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-7 text-[15px]">
+          <a class="hover:text-coffee-600 transition" href="#home">Home</a>
+          <a class="hover:text-coffee-600 transition" href="#menu">Menu</a>
+          <a class="hover:text-coffee-600 transition" href="#game">Game</a>
+          <a class="hover:text-coffee-600 transition" href="#about">About</a>
+          <a class="hover:text-coffee-600 transition" href="#visit">Visit</a>
+        </nav>
+
+        <div class="hidden md:flex items-center gap-2">
+          <a href="tel:+8801XXXXXXXXX" class="inline-flex items-center gap-2 rounded-2xl bg-cocoa text-cream px-4 py-2 text-sm font-semibold shadow-soft hover:shadow-soft-lg hover:bg-[#2f2219] transition">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4"><path fill="currentColor" d="M6.6 10.8c1.2 2.3 3 4.1 5.3 5.3l1.6-1.6a1 1 0 0 1 1-.2c1 .3 2 .5 3.1.5a1 1 0 0 1 1 1v3.2a1 1 0 0 1-1 1A17 17 0 0 1 3 5a1 1 0 0 1 1-1h3.2a1 1 0 0 1 1 1c0 1.1.2 2.1.5 3.1a1 1 0 0 1-.2 1L6.6 10.8Z"/></svg>
+            Call us
+          </a>
+          <button id="openOrder" class="rounded-2xl bg-gradient-to-r from-coffee-500 to-coffee-600 text-white px-4 py-2 text-sm font-semibold shadow-soft hover:opacity-95 transition">
+            Order
+          </button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menuBtn" class="md:hidden inline-flex items-center justify-center p-2 rounded-xl border border-coffee-200">
+          <svg id="menuIconOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="menuIconClose" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <div id="mobileNav" class="md:hidden hidden border-t border-coffee-100 bg-white">
+      <div class="px-4 py-3 space-y-1">
+        <a class="block rounded-xl px-3 py-2 hover:bg-coffee-50" href="#home">Home</a>
+        <a class="block rounded-xl px-3 py-2 hover:bg-coffee-50" href="#menu">Menu</a>
+        <a class="block rounded-xl px-3 py-2 hover:bg-coffee-50" href="#game">Game</a>
+        <a class="block rounded-xl px-3 py-2 hover:bg-coffee-50" href="#about">About</a>
+        <a class="block rounded-xl px-3 py-2 hover:bg-coffee-50" href="#visit">Visit</a>
+        <div class="pt-2 flex gap-2">
+          <a href="tel:+8801XXXXXXXXX" class="flex-1 text-center rounded-2xl bg-cocoa text-cream py-2 text-sm font-semibold">Call</a>
+          <button id="openOrderM" class="flex-1 rounded-2xl bg-gradient-to-r from-coffee-500 to-coffee-600 text-white py-2 text-sm font-semibold">Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top promo strip -->
+  <div class="bg-gradient-to-r from-coffee-700 via-coffee-600 to-coffee-500 text-cream text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-center gap-2">
+      <span class="inline-flex items-center gap-1.5">
+        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cream/70 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-cream"></span></span>
+        Fresh beans roasted in-house • Free Wi-Fi • Pet-friendly corner
+      </span>
+      <span class="hidden sm:inline">•</span>
+      <span class="hidden sm:inline">Happy Hours 4–6 PM</span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-texture"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 lg:pt-16 lg:pb-24 relative">
+    <div class="grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full bg-coffee-100 text-coffee-800 px-3 py-1 text-xs font-semibold tracking-wide">
+          <span class="h-1.5 w-1.5 rounded-full bg-coffee-600"></span>
+          EST. 2024 • DHAKA
+        </div>
+        <h1 class="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-tight text-cocoa">
+          Sip slow. <span class="text-coffee-600">Stay warm.</span><br class="hidden sm:block"/> Welcome to <span class="underline decoration-coffee-300 decoration-4 underline-offset-8">Caffeine Cove</span>.
+        </h1>
+        <p class="mt-5 text-[17px] leading-relaxed text-cocoa/80 max-w-xl">
+          A tiny cove of big flavors—handcrafted brews, soft pastries, and a corner just for you. Drop by TSC More and let the aroma do the talking.
+        </p>
+
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a href="#menu" class="rounded-2xl bg-cocoa text-cream px-5 py-3 font-semibold shadow-soft hover:bg-[#2c2118] transition">Explore Menu</a>
+          <a href="#game" class="rounded-2xl bg-white border border-coffee-200 px-5 py-3 font-semibold hover:border-coffee-300 transition flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5"><path fill="currentColor" d="M7 6h10v2H7zM6 10h12v2H6zm-1 4h14v2H5zM8 18h8v2H8z"/></svg>
+            Play a quick game
+          </a>
+          <div class="flex items-center gap-2 text-sm text-cocoa/70">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5"><path fill="currentColor" d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7Zm0 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/></svg>
+            TSC More, Dhaka
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="mt-8 grid grid-cols-3 gap-3 max-w-md">
+          <div class="rounded-2xl bg-white border border-coffee-100 p-3 shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">Signature</p>
+            <p class="text-lg font-bold text-cocoa">Flat White</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-3 shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">Sweet Pick</p>
+            <p class="text-lg font-bold text-cocoa">Biscoff Latte</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-3 shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">Vibe</p>
+            <p class="text-lg font-bold text-cocoa">Cozy • Warm</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero image stack -->
+      <div class="relative">
+        <div class="relative mx-auto max-w-lg">
+          <!-- Main image -->
+          <div class="relative rounded-[2.5rem] overflow-hidden shadow-soft-lg ring-1 ring-coffee-200">
+            <img alt="Latte art heart" class="w-full h-[420px] object-cover" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1400&auto=format&fit=crop" />
+            <!-- Steam -->
+            <div class="steam absolute left-1/2 -top-2 -translate-x-1/2">
+              <i></i><i></i><i></i>
+            </div>
+            <!-- Floating bean orb -->
+            <div class="absolute -top-6 -right-6 h-16 w-16 rounded-2xl bg-gradient-to-br from-coffee-300 to-coffee-500 shadow-soft flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-8 w-8 text-cream"><path fill="currentColor" d="M12 2c-3.9 0-7 3.1-7 7 0 5 7 13 7 13s7-8 7-13c0-3.9-3.1-7-7-7Zm0 9.5A2.5 2.5 0 1 1 14.5 9 2.5 2.5 0 0 1 12 11.5Z"/></svg>
+            </div>
+          </div>
+
+          <!-- Overlap cards -->
+          <div class="absolute -bottom-6 -left-6 w-56 rounded-2xl bg-white/80 glass border border-coffee-100 shadow-soft p-4">
+            <div class="flex items-center gap-3">
+              <div class="h-10 w-10 rounded-xl bg-coffee-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 text-coffee-700"><path fill="currentColor" d="M4 7h16v2H4zM5 11h14v2H5zm1 4h12v2H6z"/></svg>
+              </div>
+              <div>
+                <p class="text-xs text-coffee-700">Today’s roast</p>
+                <p class="font-semibold text-cocoa">Brazil Santos • Medium</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="absolute -top-5 left-1/2 -translate-x-1/2 w-64 rounded-2xl bg-white/85 glass border border-coffee-100 shadow-soft p-3">
+            <div class="flex items-center justify-between text-xs">
+              <span class="inline-flex items-center gap-1 text-coffee-700"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Open now</span>
+              <span class="text-cocoa/70">8:00 AM – 10:00 PM</span>
+            </div>
+          </div>
+
+          <!-- Tilted collage -->
+          <div class="absolute -right-8 bottom-1 w-40 h-40 rounded-3xl overflow-hidden ring-1 ring-coffee-200 shadow-soft rotate-6">
+            <img alt="Pastry" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=80&w=1200&auto=format&fit=crop"/>
+          </div>
+          <div class="absolute -left-8 top-6 w-36 h-36 rounded-3xl overflow-hidden ring-1 ring-coffee-200 shadow-soft -rotate-6">
+            <img alt="Pour over" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop"/>
+          </div>
+        </div>
+
+        <!-- Orbiting bean -->
+        <div class="hidden lg:block absolute top-6 right-10 h-24 w-24 rounded-full border border-dashed border-coffee-300/60">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="h-4 w-4 rounded-full bg-coffee-500 animate-beanOrbit"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust strip -->
+    <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="rounded-2xl bg-white border border-coffee-100 p-4 text-center shadow-soft">
+        <p class="text-2xl font-bold">1k+</p>
+        <p class="text-xs text-cocoa/70">Happy customers</p>
+      </div>
+      <div class="rounded-2xl bg-white border border-coffee-100 p-4 text-center shadow-soft">
+        <p class="text-2xl font-bold">12</p>
+        <p class="text-xs text-cocoa/70">Signature drinks</p>
+      </div>
+      <div class="rounded-2xl bg-white border border-coffee-100 p-4 text-center shadow-soft">
+        <p class="text-2xl font-bold">4.8★</p>
+        <p class="text-xs text-cocoa/70">Avg. rating</p>
+      </div>
+      <div class="rounded-2xl bg-white border border-coffee-100 p-4 text-center shadow-soft">
+        <p class="text-2xl font-bold">Free</p>
+        <p class="text-xs text-cocoa/70">Wi-Fi & sockets</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu" class="relative py-16 lg:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between gap-6">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-coffee-700">Handcrafted & Fresh</p>
+        <h2 class="mt-2 font-display text-3xl sm:text-4xl text-cocoa">Our Menu</h2>
+        <p class="mt-2 text-cocoa/70 max-w-xl">Made with love, priced in <span class="font-semibold">৳ (Bangladeshi Taka)</span>. Images are for illustration.</p>
+      </div>
+      <div class="hidden sm:flex items-center gap-2">
+        <button data-filter="all" class="filter-btn rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white hover:bg-coffee-50">All</button>
+        <button data-filter="coffee" class="filter-btn rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white hover:bg-coffee-50">Coffee</button>
+        <button data-filter="tea" class="filter-btn rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white hover:bg-coffee-50">Tea</button>
+        <button data-filter="food" class="filter-btn rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white hover:bg-coffee-50">Bakery</button>
+      </div>
+    </div>
+
+    <!-- Mobile filter -->
+    <div class="sm:hidden mt-4">
+      <div class="flex gap-2 overflow-x-auto no-scrollbar">
+        <button data-filter="all" class="filter-btn whitespace-nowrap rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white">All</button>
+        <button data-filter="coffee" class="filter-btn whitespace-nowrap rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white">Coffee</button>
+        <button data-filter="tea" class="filter-btn whitespace-nowrap rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white">Tea</button>
+        <button data-filter="food" class="filter-btn whitespace-nowrap rounded-2xl px-4 py-2 text-sm border border-coffee-200 bg-white">Bakery</button>
+      </div>
+    </div>
+
+    <!-- Menu grid -->
+    <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Card -->
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="coffee">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1200&auto=format&fit=crop" alt="Espresso">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Espresso</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Espresso</h3>
+            <p class="text-coffee-700 font-bold">৳ 180</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Short & intense single shot, 25–30 ml.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Espresso" data-price="180">Add</button>
+            <span class="text-[11px] text-cocoa/60">Customize in cart</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="coffee">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=1200&auto=format&fit=crop" alt="Cappuccino">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Milk</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Cappuccino</h3>
+            <p class="text-coffee-700 font-bold">৳ 260</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Equal parts espresso, steamed & foamed milk.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Cappuccino" data-price="260">Add</button>
+            <span class="text-[11px] text-cocoa/60">Oat/almond milk available</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="coffee">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop" alt="Flat White">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Signature</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Flat White</h3>
+            <p class="text-coffee-700 font-bold">৳ 280</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Velvety microfoam over a ristretto base.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Flat White" data-price="280">Add</button>
+            <span class="text-[11px] text-cocoa/60">Best seller</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="coffee">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=1200&auto=format&fit=crop" alt="Iced Americano">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Cold</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Iced Americano</h3>
+            <p class="text-coffee-700 font-bold">৳ 220</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Espresso + chilled water over ice.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Iced Americano" data-price="220">Add</button>
+            <span class="text-[11px] text-cocoa/60">Light & refreshing</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="coffee">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop" alt="Biscoff Latte">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Sweet</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Biscoff Latte</h3>
+            <p class="text-coffee-700 font-bold">৳ 320</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Espresso, milk, biscoff swirl & crumble.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Biscoff Latte" data-price="320">Add</button>
+            <span class="text-[11px] text-cocoa/60">Crowd favorite</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="coffee">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1200&auto=format&fit=crop" alt="Mocha">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Chocolate</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Mocha</h3>
+            <p class="text-coffee-700 font-bold">৳ 300</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Espresso + rich cocoa + steamed milk.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Mocha" data-price="300">Add</button>
+            <span class="text-[11px] text-cocoa/60">Optional whipped cream</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Tea -->
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="tea">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=1200&auto=format&fit=crop" alt="Masala Chai">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Spiced</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Masala Chai</h3>
+            <p class="text-coffee-700 font-bold">৳ 160</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Black tea simmered with spices & milk.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Masala Chai" data-price="160">Add</button>
+            <span class="text-[11px] text-cocoa/60">Less sugar on request</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="tea">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=1200&auto=format&fit=crop" alt="Lemon Honey Tea">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Calming</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Lemon Honey Tea</h3>
+            <p class="text-coffee-700 font-bold">৳ 180</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Zesty lemon with gentle honey sweetness.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Lemon Honey Tea" data-price="180">Add</button>
+            <span class="text-[11px] text-cocoa/60">Hot or iced</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Bakery -->
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="food">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1509365465985-25d11c17e812?q=80&w=1200&auto=format&fit=crop" alt="Butter Croissant">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Fresh</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Butter Croissant</h3>
+            <p class="text-coffee-700 font-bold">৳ 140</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Flaky, buttery layers—baked daily.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Butter Croissant" data-price="140">Add</button>
+            <span class="text-[11px] text-cocoa/60">Pair with espresso</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="food">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1200&auto=format&fit=crop" alt="Banana Bread">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Moist</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Banana Bread</h3>
+            <p class="text-coffee-700 font-bold">৳ 160</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Walnut-studded slice with caramel notes.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Banana Bread" data-price="160">Add</button>
+            <span class="text-[11px] text-cocoa/60">Great with latte</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="menu-card group rounded-3xl overflow-hidden bg-white border border-coffee-100 shadow-soft hover:shadow-soft-lg transition" data-cat="food">
+        <div class="relative h-48 overflow-hidden">
+          <img class="menu-img w-full h-full object-cover transition-transform duration-500" src="https://images.unsplash.com/photo-1483695028939-5bb13f8648b0?q=80&w=1200&auto=format&fit=crop" alt="Blueberry Muffin">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <span class="absolute top-3 left-3 text-[10px] uppercase tracking-widest rounded-full bg-cream px-2.5 py-1 text-cocoa border border-coffee-200">Bakery</span>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-semibold text-lg">Blueberry Muffin</h3>
+            <p class="text-coffee-700 font-bold">৳ 180</p>
+          </div>
+          <p class="mt-1 text-sm text-cocoa/70">Bursting berries, crumbly top.</p>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="add-btn rounded-2xl bg-cocoa text-cream text-sm px-3 py-2" data-name="Blueberry Muffin" data-price="180">Add</button>
+            <span class="text-[11px] text-cocoa/60">Kid-approved</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Notes -->
+    <div class="mt-8 rounded-2xl bg-cream border border-coffee-200 p-4 text-sm text-cocoa/80">
+      <p><span class="font-semibold">Note:</span> Prices are in <span class="font-semibold">৳ (BDT)</span>. We accommodate oat, almond, and soy milk (extra ৳30). Ask about our seasonal specials!</p>
+    </div>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="game" class="relative py-16 lg:py-24 bg-gradient-to-b from-[#fff6ec] to-[#fff8f2]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-10 items-start">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-coffee-700">Fun Break</p>
+        <h2 class="mt-2 font-display text-3xl sm:text-4xl text-cocoa">Catch the Coffee Beans!</h2>
+        <p class="mt-3 text-cocoa/80">A quick, no-stress game while your drink brews. Move the cup to catch falling beans. Compete for a high score and show off to your friends.</p>
+
+        <div class="mt-6 grid grid-cols-3 gap-3">
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 text-center shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">Controls</p>
+            <p class="mt-1 font-semibold">← → or A / D</p>
+            <p class="text-[11px] text-cocoa/60">(touch on mobile)</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 text-center shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">Goal</p>
+            <p class="mt-1 font-semibold">Catch 25 beans</p>
+            <p class="text-[11px] text-cocoa/60">30-second round</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 text-center shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">Perks</p>
+            <p class="mt-1 font-semibold">Free topping</p>
+            <p class="text-[11px] text-cocoa/60">on next visit*</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <button id="startGame" class="rounded-2xl bg-cocoa text-cream px-5 py-3 font-semibold shadow-soft hover:bg-[#2c2118]">Start Game</button>
+          <button id="pauseGame" class="rounded-2xl bg-white border border-coffee-200 px-5 py-3 font-semibold">Pause</button>
+          <button id="resetGame" class="rounded-2xl bg-white border border-coffee-200 px-5 py-3 font-semibold">Reset</button>
+        </div>
+
+        <p class="mt-3 text-[11px] text-cocoa/60">*Ask our barista—sometimes the Cove gives little surprises.</p>
+
+        <div class="mt-8 rounded-2xl bg-white border border-coffee-100 p-5 shadow-soft">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-coffee-700">Your best</p>
+              <p id="bestScore" class="text-2xl font-bold">0</p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs uppercase tracking-widest text-coffee-700">Current</p>
+              <p id="currentScore" class="text-2xl font-bold">0</p>
+            </div>
+          </div>
+          <div class="mt-4 h-2 w-full bg-coffee-100 rounded-full overflow-hidden">
+            <div id="timeBar" class="h-full w-0 bg-gradient-to-r from-coffee-400 to-coffee-600"></div>
+          </div>
+          <div class="mt-2 flex items-center justify-between text-[11px] text-cocoa/60">
+            <span>Time left: <span id="timeLeft">30s</span></span>
+            <span>Beans: <span id="beansCaught">0</span>/25</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game canvas -->
+      <div class="relative">
+        <div class="rounded-3xl border border-coffee-200 bg-white shadow-soft-lg overflow-hidden">
+          <div class="relative">
+            <canvas id="gameCanvas" width="760" height="520" class="w-full h-auto block bg-gradient-to-b from-[#fff4ea] to-[#fffaf5]"></canvas>
+
+            <!-- HUD overlay -->
+            <div class="absolute top-3 left-3 right-3 flex items-center justify-between">
+              <div class="rounded-2xl bg-white/80 glass border border-coffee-200 px-3 py-1.5 text-xs font-semibold text-cocoa">Caffeine Cove • Mini Game</div>
+              <div class="rounded-2xl bg-white/80 glass border border-coffee-200 px-3 py-1.5 text-xs font-semibold text-cocoa">Press <kbd class="px-1.5 py-0.5 rounded bg-coffee-100 border border-coffee-200">Space</kbd> to start</div>
+            </div>
+
+            <!-- Touch controls -->
+            <div class="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4">
+              <button id="leftBtn" class="h-12 w-12 rounded-2xl bg-cocoa text-cream text-xl font-bold shadow-soft">←</button>
+              <button id="rightBtn" class="h-12 w-12 rounded-2xl bg-cocoa text-cream text-xl font-bold shadow-soft">→</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-2xl bg-cream border border-coffee-200 p-4 text-sm text-cocoa/80">
+          <p class="font-semibold">How to play:</p>
+          <ul class="mt-1 list-disc list-inside space-y-1">
+            <li>Move the cup to catch falling coffee beans.</li>
+            <li>Avoid brown roaches—they cost you 2 seconds.</li>
+            <li>Catch the golden bean for +5 points and a time bonus!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT (Hafsa's story) -->
+<section id="about" class="relative py-16 lg:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="relative order-2 lg:order-1">
+        <div class="relative rounded-[2.5rem] overflow-hidden shadow-soft-lg ring-1 ring-coffee-200">
+          <img alt="Owner Hafsa at the counter" class="w-full h-[480px] object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1400&auto=format&fit=crop">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
+          <div class="absolute bottom-4 left-4 right-4">
+            <div class="rounded-2xl bg-white/85 glass border border-coffee-200 p-4">
+              <p class="text-xs uppercase tracking-widest text-coffee-700">Meet the founder</p>
+              <p class="mt-1 text-xl font-bold text-cocoa">Hafsa — Owner, Caffeine Cove</p>
+              <p class="mt-1 text-sm text-cocoa/80">“Start small. Stay steady. Serve kindness in every cup.”</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="mt-6 grid sm:grid-cols-3 gap-3">
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">2022</p>
+            <p class="mt-1 font-semibold">The Dream</p>
+            <p class="mt-1 text-sm text-cocoa/70">Night classes, savings from part-time work, and a tiny second-hand espresso machine.</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">2023</p>
+            <p class="mt-1 font-semibold">The Grind</p>
+            <p class="mt-1 text-sm text-cocoa/70">License hurdles, loan rejections, and learning Latte art on borrowed equipment.</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <p class="text-[11px] uppercase tracking-widest text-coffee-700">2024</p>
+            <p class="mt-1 font-semibold">The Cove Opens</p>
+            <p class="mt-1 text-sm text-cocoa/70">Caffeine Cove was born at TSC More—warm, simple, student-friendly.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-1 lg:order-2">
+        <p class="text-xs uppercase tracking-widest text-coffee-700">Our Story</p>
+        <h2 class="mt-2 font-display text-3xl sm:text-4xl text-cocoa">From struggle to steam</h2>
+        <div class="mt-5 space-y-4 text-cocoa/85 leading-relaxed">
+          <p>
+            Hi, I’m <span class="font-semibold">Hafsa</span>. Caffeine Cove started as scribbles in a notebook between lectures and a weekend stall outside campus. Money was tight. I repaired a second-hand grinder with YouTube tutorials, practiced latte art on milk cartons, and wrote every expense on tiny chits that still live in our cash box.
+          </p>
+          <p>
+            Bank loans said “not yet.” Suppliers asked for deposits I couldn’t meet. So I started with what I had—a borrowed kettle, a single-origin batch roasted by a friend, and a promise to never compromise on taste. I failed, adjusted, failed smarter. Slowly, regulars became friends. Friends became family.
+          </p>
+          <p>
+            Today, Caffeine Cove is our little cove at <span class="font-semibold">TSC More, Dhaka</span>—a warm corner for students pulling an all-nighter, couples on a rainy date, and anyone needing a quiet minute with a good cup. We still taste every shot. We still write thank-you notes. And yes—we still celebrate the tiny wins (like nailing a swan five days in a row).
+          </p>
+          <p>
+            If you’re reading this, please come say hi. Sit near the window. Tell us your name. We’ll remember it on your next visit.
+          </p>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="#visit" class="rounded-2xl bg-cocoa text-cream px-5 py-3 font-semibold shadow-soft hover:bg-[#2c2118]">Visit Us</a>
+          <a href="tel:+8801XXXXXXXXX" class="rounded-2xl bg-white border border-coffee-200 px-5 py-3 font-semibold">Call Hafsa</a>
+        </div>
+
+        <!-- Values -->
+        <div class="mt-8 grid sm:grid-cols-3 gap-3">
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <div class="h-9 w-9 rounded-xl bg-coffee-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 text-coffee-700"><path fill="currentColor" d="M12 2l2.09 6.26H20l-5.35 3.9L16.74 18 12 14.1 7.26 18l2.09-5.84L4 8.26h5.91L12 2z"/></svg>
+            </div>
+            <p class="mt-2 font-semibold">Quality First</p>
+            <p class="text-sm text-cocoa/70">Fresh beans, careful pulls, honest pricing in ৳.</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <div class="h-9 w-9 rounded-xl bg-coffee-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 text-coffee-700"><path fill="currentColor" d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm-7 9a7 7 0 0 1 14 0H5Z"/></svg>
+            </div>
+            <p class="mt-2 font-semibold">Community</p>
+            <p class="text-sm text-cocoa/70">Student-friendly, pet-welcoming, neighbor-loving.</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <div class="h-9 w-9 rounded-xl bg-coffee-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 text-coffee-700"><path fill="currentColor" d="M3 13h2v6H3zm4-4h2v10H7zm4-4h2v14h-2zm4 6h2v8h-2zm4-8h2v16h-2z"/></svg>
+            </div>
+            <p class="mt-2 font-semibold">Keep Growing</p>
+            <p class="text-sm text-cocoa/70">Learn, adapt, share—and never stop improving.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT / CONTACT -->
+<section id="visit" class="relative py-16 lg:py-24 bg-gradient-to-b from-[#fff8f2] to-[#fff4eb]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-5 gap-8">
+      <div class="lg:col-span-3">
+        <p class="text-xs uppercase tracking-widest text-coffee-700">Find us</p>
+        <h2 class="mt-2 font-display text-3xl sm:text-4xl text-cocoa">TSC More, Dhaka</h2>
+        <p class="mt-3 text-cocoa/80">We’re a short walk from Shahbagh/TSC. Look for the warm light and the smell of fresh espresso. Parking: roadside or nearby lots.</p>
+
+        <!-- Map (static embed placeholder) -->
+        <div class="mt-6 rounded-3xl overflow-hidden border border-coffee-200 shadow-soft">
+          <div class="aspect-[16/9] w-full bg-white relative">
+            <img alt="Map placeholder" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1600&auto=format&fit=crop">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"></div>
+            <div class="absolute left-4 bottom-4">
+              <div class="rounded-2xl bg-white/90 glass border border-coffee-200 p-3">
+                <p class="text-sm font-semibold">Caffeine Cove</p>
+                <p class="text-xs text-cocoa/70">TSC More, Dhaka, Bangladesh</p>
+                <div class="mt-2 flex gap-2">
+                  <a target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/TSC+More,+Dhaka" class="rounded-xl bg-cocoa text-cream px-3 py-1.5 text-xs font-semibold">Open in Maps</a>
+                  <a href="tel:+8801XXXXXXXXX" class="rounded-xl bg-white border border-coffee-200 px-3 py-1.5 text-xs font-semibold">Call</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="mt-6 grid sm:grid-cols-3 gap-3">
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <p class="text-xs uppercase tracking-widest text-coffee-700">Hours</p>
+            <p class="mt-1 font-semibold">8:00 AM – 10:00 PM</p>
+            <p class="text-sm text-cocoa/70">Daily</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <p class="text-xs uppercase tracking-widest text-coffee-700">Happy Hours</p>
+            <p class="mt-1 font-semibold">4:00 PM – 6:00 PM</p>
+            <p class="text-sm text-cocoa/70">Selected drinks</p>
+          </div>
+          <div class="rounded-2xl bg-white border border-coffee-100 p-4 shadow-soft">
+            <p class="text-xs uppercase tracking-widest text-coffee-700">Wi-Fi</p>
+            <p class="mt-1 font-semibold">caffeinecove_dhaka</p>
+            <p class="text-sm text-cocoa/70">Ask for password</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="rounded-3xl bg-white border border-coffee-100 shadow-soft p-6">
+          <h3 class="font-semibold text-xl">Say Hello / Book a seat</h3>
+          <p class="mt-1 text-sm text-cocoa/70">Walk-ins welcome. For small gatherings (6–12), drop us a note.</p>
+
+          <form id="contactForm" class="mt-4 space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs text-cocoa/70">Your name</label>
+                <input required name="name" class="mt-1 w-full rounded-2xl border border-coffee-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-coffee-300" placeholder="e.g., Tanvir" />
+              </div>
+              <div>
+                <label class="text-xs text-cocoa/70">Phone</label>
+                <input required name="phone" inputmode="tel" class="mt-1 w-full rounded-2xl border border-coffee-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-coffee-300" placeholder="+880 1X XXX XXXX" />
+              </div>
+            </div>
+            <div>
+              <label class="text-xs text-cocoa/70">When?</label>
+              <input type="datetime-local" name="when" class="mt-1 w-full rounded-2xl border border-coffee-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-coffee-300" />
+            </div>
+            <div>
+              <label class="text-xs text-cocoa/70">Guests</label>
+              <select name="guests" class="mt-1 w-full rounded-2xl border border-coffee-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-coffee-300">
+                <option>1–2</option>
+                <option>3–4</option>
+                <option>5–6</option>
+                <option>7–8</option>
+                <option>9–12</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs text-cocoa/70">Message</label>
+              <textarea name="message" rows="3" class="mt-1 w-full rounded-2xl border border-coffee-200 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-coffee-300" placeholder="Any requests?"></textarea>
+            </div>
+            <button type="submit" class="w-full rounded-2xl bg-cocoa text-cream py-2.5 font-semibold">Send Request</button>
+            <p class="text-[11px] text-cocoa/60">We’ll confirm over phone/WhatsApp. For immediate needs, please call.</p>
+          </form>
+
+          <!-- Direct contact -->
+          <div class="mt-6 rounded-2xl bg-cream border border-coffee-200 p-4">
+            <p class="text-xs uppercase tracking-widest text-coffee-700">Direct contact</p>
+            <div class="mt-2 space-y-1 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-cocoa/70">Mobile</span>
+                <a href="tel:+8801XXXXXXXXX" class="font-semibold text-cocoa">+880 1X XXX XXXX</a>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-cocoa/70">WhatsApp</span>
+                <a href="https://wa.me/8801XXXXXXXXX" target="_blank" rel="noreferrer" class="font-semibold text-cocoa">Message us</a>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-cocoa/70">Email</span>
+                <a href="mailto:hello@caffeinecove.dhaka" class="font-semibold text-cocoa">hello@caffeinecove.dhaka</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social proof -->
+        <div class="mt-4 rounded-3xl bg-white border border-coffee-100 shadow-soft p-5">
+          <div class="flex items-center justify-between">
+            <p class="font-semibold">What our guests say</p>
+            <div class="flex -space-x-2">
+              <img class="h-8 w-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/80?img=12" alt="">
+              <img class="h-8 w-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/80?img=22" alt="">
+              <img class="h-8 w-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/80?img=32" alt="">
+              <img class="h-8 w-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/80?img=41" alt="">
+            </div>
+          </div>
+          <div class="mt-3 grid gap-3">
+            <div class="rounded-2xl bg-cream border border-coffee-200 p-3">
+              <div class="flex items-center gap-2 text-[12px] text-amber-600">
+                <span>★★★★★</span>
+                <span class="text-cocoa/60">• 3 days ago</span>
+              </div>
+              <p class="mt-1 text-sm">“Best flat white near DU campus. Calm place, great playlist.” — <span class="font-semibold">Rafi</span></p>
+            </div>
+            <div class="rounded-2xl bg-cream border border-coffee-200 p-3">
+              <div class="flex items-center gap-2 text-[12px] text-amber-600">
+                <span>★★★★★</span>
+                <span class="text-cocoa/60">• 1 week ago</span>
+              </div>
+              <p class="mt-1 text-sm">“Staff is so sweet! Hafsa remembered my name.” — <span class="font-semibold">Nadia</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-coffee-100 bg-white/80 glass">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-2xl bg-gradient-to-br from-coffee-400 to-coffee-600 flex items-center justify-center text-white font-display text-xl">C</div>
+          <div>
+            <p class="font-bold">Caffeine Cove</p>
+            <p class="text-xs text-cocoa/70 -mt-1">TSC More, Dhaka</p>
+          </div>
+        </div>
+        <p class="mt-3 text-sm text-cocoa/80">A tiny cove for big conversations. Specialty coffee, kind service, and a community that feels like home.</p>
+        <div class="mt-4 flex items-center gap-2">
+          <a href="#" class="h-9 w-9 rounded-xl border border-coffee-200 flex items-center justify-center hover:bg-coffee-50" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4"><path fill="currentColor" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 12 5.5 5.5 0 0 1 12 6.5zm0 2A3.5 3.5 0 1 0 15.5 12 3.5 3.5 0 0 0 12 8.5zM17.5 6.75a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/></svg>
+          </a>
+          <a href="#" class="h-9 w-9 rounded-xl border border-coffee-200 flex items-center justify-center hover:bg-coffee-50" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4"><path fill="currentColor" d="M13 22v-8h3l.5-3H13V9.5c0-.9.2-1.5 1.5-1.5H16V5.1A22 22 0 0 0 13.2 5c-2.2 0-3.7 1.3-3.7 3.7V11H7v3h2.5v8h3.5z"/></svg>
+          </a>
+          <a href="#" class="h-9 w-9 rounded-xl border border-coffee-200 flex items-center justify-center hover:bg-coffee-50" aria-label="X">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4"><path fill="currentColor" d="M18.244 2H21l-6.4 7.3L22 22h-6.9l-4.8-6.2L4.7 22H2l6.9-7.9L2 2h7l4.3 5.6L18.244 2Zm-1.644 18h1.7L7.1 4h-1.8l11.3 16Z"/></svg>
+          </a>
+        </div>
+        <p class="mt-4 text-[11px] text-cocoa/60">© <span id="year"></span> Caffeine Cove. All rights reserved. Created by Hafsa.</p>
+      </div>
+
+      <div>
+        <p class="font-semibold">Explore</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="#menu" class="hover:text-coffee-700">Menu</a></li>
+          <li><a href="#game" class="hover:text-coffee-700">Mini Game</a></li>
+          <li><a href="#about" class="hover:text-coffee-700">Our Story</a></li>
+          <li><a href="#visit" class="hover:text-coffee-700">Visit & Hours</a></li>
+          <li><a href="#" class="hover:text-coffee-700">Careers</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-semibold">Policies</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="#" class="hover:text-coffee-700">Privacy</a></li>
+          <li><a href="#" class="hover:text-coffee-700">Terms</a></li>
+          <li><a href="#" class="hover:text-coffee-700">Refunds</a></li>
+          <li><a href="#" class="hover:text-coffee-700">Allergy Info</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-semibold">Newsletter</p>
+        <p class="mt-2 text-sm text-cocoa/70">Specials, new beans, and cozy updates. No spam.</p>
+        <form id="newsletterForm" class="mt-3 flex gap-2">
+          <input required type="email" placeholder="you@example.com" class="flex-1 rounded-2xl border border-coffee-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-coffee-300" />
+          <button class="rounded-2xl bg-cocoa text-cream px-4 text-sm font-semibold">Join</button>
+        </form>
+        <div class="mt-4 rounded-2xl bg-cream border border-coffee-200 p-3 text-xs text-cocoa/80">
+          We use cookies to remember your cart and preferences. <a href="#" class="underline">Learn more</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ORDER DRAWER -->
+<div id="orderDrawer" class="fixed inset-0 z-[60] hidden">
+  <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" id="drawerBackdrop"></div>
+  <div class="absolute right-0 top-0 h-full w-full sm:w-[420px] bg-white shadow-soft-lg border-l border-coffee-200 overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-coffee-100">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-coffee-700">Your order</p>
+        <p class="font-semibold text-cocoa">Caffeine Cove</p>
+      </div>
+      <button id="closeOrder" class="h-9 w-9 rounded-xl border border-coffee-200 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5"><path fill="currentColor" d="M18.3 5.7a1 1 0 0 0-1.4-1.4L12 9.2 7.1 4.3A1 1 0 1 0 5.7 5.7l4.9 4.9-4.9 4.9a1 1 0 1 0 1.4 1.4L12 14.8l4.9 4.9a1 1 0 0 0 1.4-1.4L13.4 13.4l4.9-4.9z"/></svg>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-auto">
+      <div class="p-5">
+        <div class="rounded-2xl bg-cream border border-coffee-200 p-3 text-xs text-cocoa/80">
+          Prices are in <span class="font-semibold">৳</span>. For dine-in, takeaway, or quick pickup.
+        </div>
+
+        <div id="cartEmpty" class="mt-6 rounded-2xl border border-dashed border-coffee-200 p-6 text-center text-sm text-cocoa/70">
+          Your cart is empty. Add something tasty from the menu.
+        </div>
+
+        <div id="cartItems" class="mt-4 space-y-3 hidden"></div>
+      </div>
+    </div>
+
+    <div class="border-t border-coffee-100 p-5">
+      <div class="flex items-center justify-between text-sm">
+        <span class="text-cocoa/70">Subtotal</span>
+        <span id="cartSubtotal" class="font-semibold">৳ 0</span>
+      </div>
+      <div class="mt-1 flex items-center justify-between text-xs text-cocoa/60">
+        <span>Service charge</span>
+        <span>৳ 0</span>
+      </div>
+      <div class="mt-3 h-[1px] w-full bg-coffee-100"></div>
+      <div class="mt-3 flex items-center justify-between">
+        <span class="font-semibold">Total</span>
+        <span id="cartTotal" class="text-xl font-bold">৳ 0</span>
+      </div>
+
+      <div class="mt-4 grid grid-cols-2 gap-2">
+        <button id="clearCart" class="rounded-2xl border border-coffee-200 px-3 py-2.5 text-sm">Clear</button>
+        <button id="checkoutBtn" class="rounded-2xl bg-cocoa text-cream px-3 py-2.5 text-sm font-semibold">Checkout</button>
+      </div>
+
+      <p class="mt-3 text-[11px] text-cocoa/60">Checkout opens WhatsApp with your order summary. Payment on pickup (cash/bKash/Nagad accepted in-store).</p>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] hidden">
+  <div class="rounded-2xl bg-cocoa text-cream px-4 py-2.5 text-sm shadow-soft"></div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Mobile nav toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileNav = document.getElementById('mobileNav');
+  const menuIconOpen = document.getElementById('menuIconOpen');
+  const menuIconClose = document.getElementById('menuIconClose');
+  menuBtn?.addEventListener('click', () => {
+    const hidden = mobileNav.classList.contains('hidden');
+    mobileNav.classList.toggle('hidden', !hidden);
+    menuIconOpen.classList.toggle('hidden', hidden);
+    menuIconClose.classList.toggle('hidden', !hidden);
+  });
+
+  // Toast helper
+  const toastEl = document.getElementById('toast');
+  function toast(msg) {
+    toastEl.querySelector('div').textContent = msg;
+    toastEl.classList.remove('hidden');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(()=> toastEl.classList.add('hidden'), 2200);
+  }
+
+  // Menu filter
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const menuCards = document.querySelectorAll('.menu-card');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('bg-coffee-100', 'text-coffee-800', 'border-coffee-300'));
+      btn.classList.add('bg-coffee-100', 'text-coffee-800', 'border-coffee-300');
+      const cat = btn.dataset.filter;
+      menuCards.forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.classList.toggle('hidden', !show);
+      });
+    });
+  });
+
+  // Cart logic
+  const orderDrawer = document.getElementById('orderDrawer');
+  const openOrder = document.getElementById('openOrder');
+  const openOrderM = document.getElementById('openOrderM');
+  const closeOrder = document.getElementById('closeOrder');
+  const drawerBackdrop = document.getElementById('drawerBackdrop');
+  const cartItems = document.getElementById('cartItems');
+  const cartEmpty = document.getElementById('cartEmpty');
+  const cartSubtotal = document.getElementById('cartSubtotal');
+  const cartTotal = document.getElementById('cartTotal');
+  const clearCartBtn = document.getElementById('clearCart');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+
+  function openDrawer(){ orderDrawer.classList.remove('hidden'); document.body.classList.add('overflow-hidden'); }
+  function closeDrawer(){ orderDrawer.classList.add('hidden'); document.body.classList.remove('overflow-hidden'); }
+
+  openOrder?.addEventListener('click', openDrawer);
+  openOrderM?.addEventListener('click', openDrawer);
+  closeOrder?.addEventListener('click', closeDrawer);
+  drawerBackdrop?.addEventListener('click', closeDrawer);
+
+  let cart = [];
+
+  function renderCart() {
+    cartItems.innerHTML = '';
+    if (!cart.length) {
+      cartEmpty.classList.remove('hidden');
+      cartItems.classList.add('hidden');
+      cartSubtotal.textContent = '৳ 0';
+      cartTotal.textContent = '৳ 0';
+      return;
+    }
+    cartEmpty.classList.add('hidden');
+    cartItems.classList.remove('hidden');
+
+    let subtotal = 0;
+    cart.forEach((it, idx) => {
+      const lineTotal = it.price * it.qty;
+      subtotal += lineTotal;
+
+      const row = document.createElement('div');
+      row.className = "rounded-2xl border border-coffee-100 p-3";
+      row.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-sm font-semibold">${it.name}</p>
+            <p class="text-xs text-cocoa/60">৳ ${it.price} each</p>
+          </div>
+          <div class="text-right">
+            <p class="text-sm font-bold">৳ ${lineTotal}</p>
+          </div>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button class="h-8 w-8 rounded-xl border border-coffee-200 text-sm" data-act="dec" data-i="${idx}">–</button>
+            <span class="w-8 text-center text-sm">${it.qty}</span>
+            <button class="h-8 w-8 rounded-xl border border-coffee-200 text-sm" data-act="inc" data-i="${idx}">+</button>
+          </div>
+          <button class="text-xs text-red-600" data-act="remove" data-i="${idx}">Remove</button>
+        </div>
+      `;
+      cartItems.appendChild(row);
+    });
+
+    cartSubtotal.textContent = `৳ ${subtotal}`;
+    cartTotal.textContent = `৳ ${subtotal}`;
+  }
+
+  function addToCart(name, price) {
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.qty++; } else { cart.push({ name, price: Number(price), qty: 1 }); }
+    renderCart();
+    openDrawer();
+    toast(`${name} added`);
+  }
+
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('.add-btn');
+    if (btn) {
+      addToCart(btn.dataset.name, btn.dataset.price);
+    }
+    const actBtn = e.target.closest('[data-act]');
+    if (actBtn && cartItems.contains(actBtn)) {
+      const i = Number(actBtn.dataset.i);
+      const act = actBtn.dataset.act;
+      if (!cart[i]) return;
+      if (act === 'inc') cart[i].qty++;
+      if (act === 'dec') { cart[i].qty--; if (cart[i].qty < 1) cart.splice(i,1); }
+      if (act === 'remove') cart.splice(i,1);
+      renderCart();
+    }
+  });
+
+  clearCartBtn.addEventListener('click', () => { cart = []; renderCart(); toast('Cart cleared'); });
+  checkoutBtn.addEventListener('click', () => {
+    if (!cart.length) { toast('Your cart is empty'); return; }
+    const lines = cart.map(i => `• ${i.qty}× ${i.name} — ৳ ${i.price*i.qty}`).join('%0A');
+    const total = cart.reduce((s,i)=> s + i.price*i.qty, 0);
+    const text = `Hello Caffeine Cove!%0AOrder:%0A${lines}%0A%0ATotal: ৳ ${total}%0A%0APickup or Dine-in:%0AName:%0APhone:`;
+    window.open(`https://wa.me/8801XXXXXXXXX?text=${text}`, '_blank');
+  });
+
+  // Contact form
+  document.getElementById('contactForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const name = fd.get('name') || 'Guest';
+    toast(`Thanks, ${name}! We'll confirm shortly.`);
+    e.target.reset();
+  });
+
+  // Newsletter
+  document.getElementById('newsletterForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    toast('You’re on the list! ☕');
+    e.target.reset();
+  });
+
+  // =========================
+  // BEAN CATCH GAME
+  // =========================
+  (function(){
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startGame');
+    const pauseBtn = document.getElementById('pauseGame');
+    const resetBtn = document.getElementById('resetGame');
+    const bestScoreEl = document.getElementById('bestScore');
+    const currentScoreEl = document.getElementById('currentScore');
+    const timeLeftEl = document.getElementById('timeLeft');
+    const beansCaughtEl = document.getElementById('beansCaught');
+    const timeBar = document.getElementById('timeBar');
+    const leftBtn = document.getElementById('leftBtn');
+    const rightBtn = document.getElementById('rightBtn');
+
+    let W = canvas.width, H = canvas.height;
+    const cup = { x: W/2, y: H - 60, w: 110, h: 28, speed: 6 };
+    let keys = { left:false, right:false };
+    let running = false, paused = false;
+    let beans = []; // {x,y,r,v,rot, kind}
+    let score = 0;
+    let best = Number(localStorage.getItem('cc_best') || 0);
+    let time = 30; // seconds
+    let timerId = null;
+    let last = performance.now();
+    let beansNeeded = 25;
+
+    bestScoreEl.textContent = best;
+
+    function resetState(){
+      cup.x = W/2;
+      beans = [];
+      score = 0;
+      time = 30;
+      beansNeeded = 25;
+      updateUI();
+      draw();
+    }
+
+    function updateUI(){
+      currentScoreEl.textContent = score;
+      bestScoreEl.textContent = Math.max(best, score);
+      beansCaughtEl.textContent = Math.max(0, 25 - beansNeeded);
+      timeLeftEl.textContent = `${Math.max(0, Math.ceil(time))}s`;
+      const pct = Math.max(0, Math.min(1, time / 30));
+      timeBar.style.width = `${pct * 100}%`;
+    }
+
+    function spawn(){
+      // spawn rate increases with time pressure
+      const rate = 0.06 + (30 - time) * 0.002;
+      if (Math.random() < rate) {
+        const kindRoll = Math.random();
+        let kind = 'bean';
+        if (kindRoll < 0.05) kind = 'gold';
+        else if (kindRoll < 0.12) kind = 'roach';
+
+        const r = kind==='gold'? 12 : 10;
+        beans.push({
+          x: 30 + Math.random()*(W-60),
+          y: -20,
+          r,
+          v: 2 + Math.random()*2.8,
+          rot: Math.random()*Math.PI*2,
+          vr: (Math.random()*0.08)-0.04,
+          kind
+        });
+      }
+    }
+
+    function step(dt){
+      // move cup
+      if (keys.left) cup.x -= cup.speed;
+      if (keys.right) cup.x += cup.speed;
+      cup.x = Math.max(cup.w/2 + 6, Math.min(W - cup.w/2 - 6, cup.x));
+
+      // spawn
+      spawn();
+
+      // update beans
+      for (let i=beans.length-1; i>=0; i--){
+        const b = beans[i];
+        b.y += b.v;
+        b.rot += b.vr;
+        // remove offscreen
+        if (b.y > H + 30) { beans.splice(i,1); continue; }
+
+        // collision with cup (ellipse-ish)
+        const dx = Math.abs(b.x - cup.x);
+        const dy = b.y - (cup.y - cup.h/2);
+        const withinX = dx < cup.w/2 + b.r*0.6;
+        const withinY = dy > -b.r && dy < cup.h + b.r*0.6;
+
+        if (withinX && withinY) {
+          if (b.kind === 'bean') {
+            score += 1;
+            beansNeeded = Math.max(0, beansNeeded - 1);
+            // small pop
+            b.v = -3;
+            b.kind = 'pop';
+            setTimeout(()=>{ const idx = beans.indexOf(b); if (idx>-1) beans.splice(idx,1); }, 90);
+          } else if (b.kind === 'gold') {
+            score += 5;
+            beansNeeded = Math.max(0, beansNeeded - 3);
+            time = Math.min(30, time + 2);
+            beans.splice(i,1);
+          } else if (b.kind === 'roach') {
+            time = Math.max(0, time - 2);
+            // bounce away
+            b.v = -2.2;
+            b.x += (Math.random()-0.5)*40;
+            b.kind = 'popRoach';
+            setTimeout(()=>{ const idx = beans.indexOf(b); if (idx>-1) beans.splice(idx,1); }, 120);
+          }
+        }
+      }
+    }
+
+    function draw(){
+      // background
+      const g = ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0, '#fff6ec');
+      g.addColorStop(1, '#fffaf5');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+
+      // subtle vignette
+      const rad = ctx.createRadialGradient(W/2, H*0.6, H*0.2, W/2, H*0.6, H);
+      rad.addColorStop(0, 'rgba(202,169,126,0.06)');
+      rad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = rad;
+      ctx.fillRect(0,0,W,H);
+
+      // cup shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.08)';
+      ctx.beginPath();
+      ctx.ellipse(cup.x, cup.y + 10, cup.w*0.55, 8, 0, 0, Math.PI*2);
+      ctx.fill();
+
+      // cup
+      ctx.save();
+      ctx.translate(cup.x, cup.y);
+      // body
+      const cupGrad = ctx.createLinearGradient(-cup.w/2, -cup.h, cup.w/2, cup.h);
+      cupGrad.addColorStop(0, '#a9865a');
+      cupGrad.addColorStop(1, '#73593c');
+      ctx.fillStyle = cupGrad;
+      roundRect(ctx, -cup.w/2, -cup.h/2, cup.w, cup.h, 10, true, false);
+      // rim
+      ctx.fillStyle = '#5e4833';
+      roundRect(ctx, -cup.w/2 - 6, -cup.h/2 - 6, cup.w + 12, 8, 4, true, false);
+      // handle
+      ctx.strokeStyle = '#5e4833';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(cup.w/2 + 6, 0, 14, -Math.PI*0.6, Math.PI*0.6);
+      ctx.stroke();
+      ctx.restore();
+
+      // beans
+      beans.forEach(b=>{
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rot);
+        if (b.kind === 'bean' || b.kind === 'pop'){
+          // bean shape
+          const beanGrad = ctx.createRadialGradient(0,-2,2,0,0, b.r);
+          beanGrad.addColorStop(0, '#8e6f49');
+          beanGrad.addColorStop(1, '#5e4833');
+          ctx.fillStyle = beanGrad;
+          ctx.beginPath();
+          ctx.ellipse(0,0,b.r*0.9,b.r*1.25,0,0,Math.PI*2);
+          ctx.fill();
+          // crease
+          ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(0, -b.r*0.8);
+          ctx.lineTo(0, b.r*0.8);
+          ctx.stroke();
+        } else if (b.kind === 'gold'){
+          const goldGrad = ctx.createRadialGradient(0,-2,2,0,0,b.r);
+          goldGrad.addColorStop(0, '#f3d38b');
+          goldGrad.addColorStop(1, '#c8a14f');
+          ctx.fillStyle = goldGrad;
+          ctx.beginPath();
+          ctx.ellipse(0,0,b.r*0.9,b.r*1.25,0,0,Math.PI*2);
+          ctx.fill();
+          // sparkle
+          ctx.fillStyle = '#fff8df';
+          ctx.fillRect(-1, -b.r*0.6, 2, 6);
+          ctx.fillRect(-b.r*0.6, -1, 6, 2);
+        } else if (b.kind === 'roach' || b.kind === 'popRoach'){
+          // oval body
+          ctx.fillStyle = '#6b4f3a';
+          ctx.beginPath();
+          ctx.ellipse(0,0,b.r*1.1,b.r*0.8,0,0,Math.PI*2);
+          ctx.fill();
+          // legs
+          ctx.strokeStyle = '#4b392a';
+          ctx.lineWidth = 1.2;
+          for(let k=-1;k<=1;k++){
+            ctx.beginPath();
+            ctx.moveTo(k*b.r*0.5, 0);
+            ctx.lineTo(k*b.r*0.8, b.r*0.9);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      });
+
+      // HUD text mini
+      ctx.fillStyle = '#4b392a';
+      ctx.font = '600 14px Outfit, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`Score: ${score}`, 16, 26);
+      ctx.textAlign = 'right';
+      ctx.fillText(`Time: ${Math.max(0, Math.ceil(time))}s`, W-16, 26);
+    }
+
+    function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+      if (w < 2 * r) r = w / 2;
+      if (h < 2 * r) r = h / 2;
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y,   x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x,   y+h, r);
+      ctx.arcTo(x,   y+h, x,   y,   r);
+      ctx.arcTo(x,   y,   x+w, y,   r);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    function loop(now){
+      if (!running || paused) { last = now; requestAnimationFrame(loop); return; }
+      const dt = Math.min(32, now - last); // clamp
+      last = now;
+
+      step(dt/16.666);
+      time -= dt/1000;
+      if (time <= 0 || score >= 25) {
+        running = false;
+        clearInterval(timerId);
+        updateUI();
+        draw();
+        if (score > best) {
+          best = score;
+          localStorage.setItem('cc_best', String(best));
+          toast('New high score! 🎉');
+        } else {
+          toast(score >= 25 ? 'You did it! Free topping next time 😉' : 'Time’s up—try again!');
+        }
+        return;
+      }
+
+      updateUI();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    function start(){
+      if (running && !paused) return;
+      if (!running) {
+        resetState();
+        running = true;
+        paused = false;
+        last = performance.now();
+        requestAnimationFrame(loop);
+      } else if (paused) {
+        paused = false;
+        last = performance.now();
+        requestAnimationFrame(loop);
+      }
+    }
+    function pause(){
+      if (!running) return;
+      paused = !paused;
+      if (!paused) { last = performance.now(); requestAnimationFrame(loop); }
+    }
+    function reset(){
+      running = false; paused = false;
+      clearInterval(timerId);
+      resetState();
+    }
+
+    // input
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+      if (e.code === 'Space') { e.preventDefault(); start(); }
+      if (e.code === 'KeyP') pause();
+    });
+    window.addEventListener('keyup', (e) => {
+      if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+    });
+
+    // touch
+    let touchId = null;
+    canvas.addEventListener('touchstart', (e)=>{
+      for (const t of e.changedTouches){
+        const rect = canvas.getBoundingClientRect();
+        const x = (t.clientX - rect.left) * (W/rect.width);
+        if (x < W/2) keys.left = true; else keys.right = true;
+        touchId = t.identifier;
+      }
+    }, {passive:true});
+    canvas.addEventListener('touchend', (e)=>{
+      for (const t of e.changedTouches){
+        if (t.identifier === touchId){ keys.left = keys.right = false; touchId = null; }
+      }
+    }, {passive:true});
+    leftBtn.addEventListener('touchstart', ()=> keys.left = true);
+    leftBtn.addEventListener('touchend', ()=> keys.left = false);
+    rightBtn.addEventListener('touchstart', ()=> keys.right = true);
+    rightBtn.addEventListener('touchend', ()=> keys.right = false);
+    leftBtn.addEventListener('mousedown', ()=> keys.left = true);
+    leftBtn.addEventListener('mouseup', ()=> keys.left = false);
+    leftBtn.addEventListener('mouseleave', ()=> keys.left = false);
+    rightBtn.addEventListener('mousedown', ()=> keys.right = true);
+    rightBtn.addEventListener('mouseup', ()=> keys.right = false);
+    rightBtn.addEventListener('mouseleave', ()=> keys.right = false);
+
+    startBtn.addEventListener('click', start);
+    pauseBtn.addEventListener('click', pause);
+    resetBtn.addEventListener('click', reset);
+
+    // initial paint
+    resetState();
+  })();
+</script>
+</body>
+            </html>
